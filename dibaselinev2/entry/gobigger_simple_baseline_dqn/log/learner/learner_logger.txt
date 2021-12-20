@@ -1,0 +1,97 @@
+[2021-12-20 16:46:15,890][base_learner.py][line: 333][    INFO] [RANK0]: DI-engine DRL Policy
+GoBiggerHybridActionSimple(
+  (activation): ReLU()
+  (encoder): StructedGcnConvSimple(
+    (scalar_encoder): Sequential(
+      (0): Linear(in_features=5, out_features=32, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=32, out_features=128, bias=True)
+      (3): ReLU()
+    )
+    (food_encoder): Sequential(
+      (0): Conv2d(2, 32, kernel_size=(5, 5), stride=(4, 4), padding=(2, 2))
+      (1): ReLU()
+      (2): Conv2d(32, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      (3): ReLU()
+      (4): Conv2d(64, 64, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      (5): ReLU()
+      (6): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1))
+      (7): ReLU()
+      (8): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1))
+      (9): ReLU()
+    )
+    (food_relation_encoder): Sequential(
+      (0): Linear(in_features=150, out_features=64, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=64, out_features=128, bias=True)
+      (3): ReLU()
+    )
+    (thorn_relation_encoder): Sequential(
+      (0): Linear(in_features=12, out_features=32, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=32, out_features=128, bias=True)
+      (3): ReLU()
+    )
+    (clone_encoder): Sequential(
+      (0): Linear(in_features=17, out_features=32, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=32, out_features=128, bias=True)
+      (3): ReLU()
+    )
+    (clone_relation_encoder): Sequential(
+      (0): Linear(in_features=12, out_features=32, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=32, out_features=128, bias=True)
+      (3): ReLU()
+    )
+    (gcn_1): RelationGCN(
+      (act): ReLU()
+      (thorn_relation_layers): Sequential(
+        (0): Linear(in_features=256, out_features=128, bias=True)
+        (1): ReLU()
+      )
+      (clone_relation_layers): Sequential(
+        (0): Linear(in_features=384, out_features=128, bias=True)
+        (1): ReLU()
+      )
+      (agg_relation_layers): Sequential(
+        (0): Linear(in_features=512, out_features=128, bias=True)
+        (1): ReLU()
+      )
+    )
+    (gcn_2): RelationGCN(
+      (act): ReLU()
+      (thorn_relation_layers): Sequential(
+        (0): Linear(in_features=256, out_features=128, bias=True)
+        (1): ReLU()
+      )
+      (clone_relation_layers): Sequential(
+        (0): Linear(in_features=384, out_features=128, bias=True)
+        (1): ReLU()
+      )
+      (agg_relation_layers): Sequential(
+        (0): Linear(in_features=512, out_features=128, bias=True)
+        (1): ReLU()
+      )
+    )
+    (agg_encoder): Sequential(
+      (0): Linear(in_features=384, out_features=128, bias=True)
+      (1): ReLU()
+      (2): Linear(in_features=128, out_features=32, bias=True)
+      (3): ReLU()
+    )
+  )
+  (action_type_head): DiscreteHead(
+    (Q): Sequential(
+      (0): Sequential(
+        (0): Linear(in_features=32, out_features=32, bias=True)
+        (1): ReLU()
+        (2): Linear(in_features=32, out_features=32, bias=True)
+        (3): ReLU()
+      )
+      (1): Sequential(
+        (0): Linear(in_features=32, out_features=16, bias=True)
+      )
+    )
+  )
+)
