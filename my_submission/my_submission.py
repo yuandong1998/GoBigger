@@ -1,5 +1,4 @@
-from gobigger.agents import BotAgent
-
+from .rule_agent import RuleAgent
 
 class BaseSubmission:
 
@@ -15,13 +14,13 @@ class BaseSubmission:
         raise NotImplementedError
 
 
-class BotSubmission(BaseSubmission):
+class MySubmission(BaseSubmission):
 
     def __init__(self, team_name, player_names):
-        super(BotSubmission, self).__init__(team_name, player_names)
+        super(MySubmission, self).__init__(team_name, player_names)
         self.agents = {}
         for player_name in self.player_names:
-            self.agents[player_name] = BotAgent(name=player_name)
+            self.agents[player_name] = RuleAgent(name=player_name)
 
     def get_actions(self, obs):
         global_state, player_states = obs

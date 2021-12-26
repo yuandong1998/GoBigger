@@ -1,5 +1,4 @@
-import random
-
+from .rule_agent import RuleAgent
 
 class BaseSubmission:
 
@@ -15,15 +14,18 @@ class BaseSubmission:
         raise NotImplementedError
 
 
-class RandomSubmission(BaseSubmission):
+class MySubmission(BaseSubmission):
 
     def __init__(self, team_name, player_names):
-        super(RandomSubmission, self).__init__(team_name, player_names)
+        super(MySubmission, self).__init__(team_name, player_names)
+        self.agents = {}
+        for player_name in self.player_names:
+            self.agents[player_name] = RuleAgent(name=player_name)
 
     def get_actions(self, obs):
         global_state, player_states = obs
         actions = {}
-        for player_name, _ in player_states.items():
-            action = [random.uniform(-1, 1), random.uniform(-1, 1), -1]
+        for player_name, agent in self.agents.items():
+            action = agent.step(player_states[player_name])
             actions[player_name] = action
         return actions

@@ -18,8 +18,7 @@ from gobigger.render import RealtimeRender, RealtimePartialRender, EnvRender
 
 logging.basicConfig(level=logging.DEBUG)
 
-
-def eval_once():
+def eval_once(cfg):
     server = Server(dict(
             team_num=4, # 队伍数量
             player_num_per_team=3, # 每个队伍的玩家数量
@@ -33,15 +32,18 @@ def eval_once():
     team_names = list(team_player_names.keys())
 
     for index in range(0,server.team_num):
-        try:
-            p = importlib.import_module('{}.my_submission'.format(cfg.players[index]))
-            agents.append(p.MySubmission(team_name=team_names[index], 
+        p = importlib.import_module('{}.my_submission'.format(cfg.players[index]))
+        agents.append(p.MySubmission(team_name=team_names[index], 
                                          player_names=team_player_names[team_names[index]]))
-        except Exception as e:
-            print('You must implement `MySubmission` in my_submission.py !')
-            exit()
+        # try:
+        #     p = importlib.import_module('{}.my_submission'.format(cfg.players[index]))
+        #     agents.append(p.MySubmission(team_name=team_names[index], 
+        #                                  player_names=team_player_names[team_names[index]]))
+        # except Exception as e:
+        #     print('You must implement `MySubmission` in my_submission.py !')
+        #     exit()
     
-    for i in tqdm(range(30*server.action_tick_per_second)):
+    for i in range(server.match_time*server.action_tick_per_second):
         obs = server.obs()
         global_state, player_states = obs
         actions = {}
@@ -61,19 +63,30 @@ def eval_once():
     server.close()
     return winner
 
+
+from multiprocessing import Pool
+
 def eval(cfg):
     win_rate=dict()
-    for i in range(cfg.EVAL_TIME):
-        winner=eval_once(cfg)
+    for i in range(4):
+        win_rate[str(i)]=0
+    # for i in range(cfg.EVAL_TIME):
+    #     winner=eval_once(cfg)
+    #     win_rate[winner]=win_rate.get(winner,0)+1
+
+    p=Pool(10)
+    res=p.map(eval_once,[cfg for _ in range(10)])
+    for winner in res:
         win_rate[winner]=win_rate.get(winner,0)+1
     
     output=""
     for p in range(len(cfg.players)):
-        output+=cfg.players[p]+":"+str(win_rate[p]/cfg.EVAL_TIME)
+        output+=cfg.players[p]+":"+str(win_rate.get(str(p),0)/cfg.EVAL_TIME)
     print(output)
-
+    
 if __name__ == '__main__':
-    cfg=dict()
-    cfg.EVAL_TIME=10 #验证次数
-    cfg.players=['dibaselinev1','dibaselinev1','dibaselinev1','dibaselinev1'] #players
-    eval()
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--EVAL_TIME', type=int,default=10)
+    args = parser.parse_args()
+    args.players=['ruleAgent','botAgent','botAgent','botAgent'] #players
+    eval(args)
